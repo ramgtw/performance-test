@@ -27,11 +27,11 @@ class UserSimulation extends Simulation {
 	//details("Search Patient by Identifier").responseTime.percentile3.lte(42000),
 	//details("Search Patient by Name").responseTime.percentile3.lte(37000),
 	details("Search Patient by Name").successfulRequests.percent.gte(95),
-	details("getVisits").responseTime.percentile3.lte(4000),
-	details("get lab order results").responseTime.percentile3.lte(15000),
-	details("get diagnoses for patient").responseTime.percentile3.lte(7000),
-	details("create patient").responseTime.percentile3.lte(17000),
-	details("get obs").responseTime.percentile3.lte(3000),
-	details("capture encounter").responseTime.percentile3.lte(6000)
+	details("getVisits").responseTime.percentile3.lte(6000),
+	details("get lab order results").responseTime.percentile3.lte(17000),
+	details("get diagnoses for patient").responseTime.percentile3.lte(9000),
+	details("create patient").responseTime.percentile3.lte(22000),
+	details("get obs").responseTime.percentile3.lte(5000),
+	details("capture encounter").responseTime.percentile3.lte(8000)
     )
 }
