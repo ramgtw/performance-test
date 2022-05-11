@@ -13,6 +13,27 @@ object HttpRequests {
       .queryParam("username", username)
   }
 
+  def getSession:HttpRequestBuilder = {
+    http("get session")
+      .get("/openmrs/ws/rest/v1/session?v=custom:(uuid)")
+  }
+
+  def postUserInfo(Uuid: String):HttpRequestBuilder = {
+    http("post user info")
+      .post("/openmrs/ws/rest/v1/user/"+Uuid)
+      .body(StringBody(
+        s"""{"uuid":"$Uuid","userProperties":{"defaultLocale":"en","favouriteObsTemplates":"",
+           "recentlyViewedPatients":"","loginAttempts":"0","favouriteWards":"General Ward###Labour Ward"}}"""))
+      .asJSON
+  }
+
+  def postAuditLog:HttpRequestBuilder = {
+    http("post audit log")
+      .post("/openmrs/ws/rest/v1/auditlog")
+      .body(StringBody("{\"eventType\":\"DUMMY_PERF_MESSAGE\",\"message\":\"DUMMY_PERF_TEST_MESSAGE\",\"module\":\"MODULE_PERF_TEST\"}"))
+      .asJSON
+  }
+
   def getGlobalProperty(property: String): HttpRequestBuilder = {
     http("get " + property + " global property")
       .get("/openmrs/ws/rest/v1/bahmnicore/sql/globalproperty")
@@ -23,6 +44,11 @@ object HttpRequests {
     http("get provider")
       .get("/openmrs/ws/rest/v1/provider")
       .queryParam("user", userUuid)
+  }
+
+  def getByVisitLocation(visitLocationUuid: String): HttpRequestBuilder = {
+    http("get visit location")
+    .get("/openmrs/ws/rest/v1/location/"+visitLocationUuid)
   }
 
   def getLoginLocations: HttpRequestBuilder = {
@@ -86,15 +112,21 @@ object HttpRequests {
 
   def searchPatientUsingName(loginLocationUuid: String, identifier: String): HttpRequestBuilder = {
     http("Search Patient by Name")
-      .get("/openmrs/ws/rest/v1/bahmnicore/search/patient")
+      .get("/openmrs/ws/rest/v1/bahmnicore/search/patient/lucene")
       .queryParam("loginLocationUuid", loginLocationUuid)
-      .queryParam("q", identifier)
-      .queryParam("addressFieldName", "city_village")
-      .queryParam("addressSearchResultsConfig", "city_village")
-      .queryParam("addressSearchResultsConfig", "address1")
+      .queryParam("identifier", identifier)
+      .queryParam("patientAttributes", "givenNameLocal")
+      .queryParam("patientAttributes", "middleNameLocal")
+      .queryParam("patientAttributes", "familyNameLocal")
+      .queryParam("addressFieldName", "address2")
+      .queryParam("addressSearchResultsConfig", "address2")
+      .queryParam("patientSearchResultsConfig", "givenNameLocal")
+      .queryParam("patientSearchResultsConfig", "middleNameLocal")
+      .queryParam("patientSearchResultsConfig", "familyNameLocal")
       .queryParam("filterOnAllIdentifiers", "true")
       .queryParam("s", "byIdOrNameOrVillage")
       .queryParam("startIndex", "0")
+      .queryParam("programAttributeFieldValue", "")
   }
 
   def getPatientConfigFromServer: HttpRequestBuilder = {
