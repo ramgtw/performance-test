@@ -6,12 +6,13 @@ import io.gatling.http.Predef._
 object Configuration {
 
   object Constants {
-    val BASE_HTTPS_URL = "https://product-qa09.mybahmni.local"
-    val BASE_HTTP_URL = "http://product-qa09.mybahmni.local:8050"
+    val BASE_HTTPS_URL = "https://demo-v93.mybahmni.org"
+    val BASE_HTTP_URL = "http://demo-v93.mybahmni.org"
     val LOGIN_USER = "superman"
     val LOGIN_USER_UUID = "cac3a2c0-4929-4103-90da-de7f99573aab"
     val PROVIDER_UUID = "d390d057-ec33-45c1-8342-9e23d706aa4d"
-    val LOGIN_LOCATION_UUID = "b4831eb8-c79a-11e2-b284-107d46e7b2c5"
+    val LOGIN_LOCATION_UUID = "baf7bd38-d225-11e4-9c67-080027b662ec"
+    val VISIT_TYPE_ID = "c22a5000-3f10-11e4-adec-0800271c1b75"
     val PATIENT_IDENTIFIER = "GAN179326"
     val PATIENT_IDENTIFIER1 = "SIV156624"
     val PATIENT_IDENTIFIER2 = "BAM118663"

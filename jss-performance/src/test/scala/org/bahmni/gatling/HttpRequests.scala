@@ -1,6 +1,7 @@
 package org.bahmni.gatling
 
 import io.gatling.core.Predef._
+import io.gatling.core.body.{CompositeByteArrayBody, StringBody}
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import org.bahmni.gatling.Configuration.Constants._
@@ -112,21 +113,22 @@ object HttpRequests {
 
   def searchPatientUsingName(loginLocationUuid: String, identifier: String): HttpRequestBuilder = {
     http("Search Patient by Name")
-      .get("/openmrs/ws/rest/v1/bahmnicore/search/patient/lucene")
+      .get("/openmrs/ws/rest/v1/bahmnicore/search/patient")
+      .queryParam("addressFieldName", "address2")
+      .queryParam("addressFieldValue","")
+      .queryParam("addressSearchResultsConfig", "address2")
+      .queryParam("customAttribute","")
       .queryParam("loginLocationUuid", loginLocationUuid)
-      .queryParam("identifier", identifier)
       .queryParam("patientAttributes", "givenNameLocal")
       .queryParam("patientAttributes", "middleNameLocal")
       .queryParam("patientAttributes", "familyNameLocal")
-      .queryParam("addressFieldName", "address2")
-      .queryParam("addressSearchResultsConfig", "address2")
       .queryParam("patientSearchResultsConfig", "givenNameLocal")
       .queryParam("patientSearchResultsConfig", "middleNameLocal")
       .queryParam("patientSearchResultsConfig", "familyNameLocal")
-      .queryParam("filterOnAllIdentifiers", "true")
+      .queryParam("programAttributeFieldValue", "")
+      .queryParam("q", identifier)
       .queryParam("s", "byIdOrNameOrVillage")
       .queryParam("startIndex", "0")
-      .queryParam("programAttributeFieldValue", "")
   }
 
   def getPatientConfigFromServer: HttpRequestBuilder = {
@@ -138,6 +140,11 @@ object HttpRequests {
     http("get " + name + " concept")
       .get("/openmrs/ws/rest/v1/concept?s=byFullySpecifiedName&v=custom:(uuid,name,answers)")
       .queryParam("name", name)
+  }
+
+  def getReasonForDeath: HttpRequestBuilder = {
+    http("Get reason for death")
+      .get("/openmrs/ws/rest/v1/concept?s=byFullySpecifiedName&name=Reason+For+Death&v=custom:(uuid,name,set,names,setMembers:(uuid,display,name:(uuid,name),names,retired))")
   }
 
   def getPatientsInSearchTab(locationUuid: String, providerUuid: String, sqlName: String): HttpRequestBuilder = {
@@ -164,6 +171,12 @@ object HttpRequests {
   def getPatient(patientUuid: String): HttpRequestBuilder = {
     http("get patient")
       .get("/openmrs/ws/rest/v1/patient/" + patientUuid)
+  }
+
+  def getPatientProfileAfterRegistration(patientUuid: String): HttpRequestBuilder = {
+    http("get patient")
+      .get("/openmrs/ws/rest/v1/patientprofile/" + patientUuid)
+      .queryParam("v","full")
   }
 
   def getDiagnoses(patientUuid: String): HttpRequestBuilder = {
@@ -329,17 +342,16 @@ object HttpRequests {
       .get("/openmrs/ws/rest/v1/patientImage?patientUuid=2e1a2899-409c-40c4-b8fd-3476bb11dce3&q=2016-12-06T12:19:15.166Z")
   }
 
-  def createPatientRequest: HttpRequestBuilder = {
-    http("create patient")
-      .post("/openmrs/ws/rest/v1/bahmnicore/patientprofile")
-      .body(RawFileBody("patient_profile.json"))
-      .asJSON
+  def createPatientRequest(fileBody : CompositeByteArrayBody): HttpRequestBuilder = {
+      http("create patient")
+        .post("/openmrs/ws/rest/v1/bahmnicore/patientprofile")
+        .body(fileBody).asJSON
   }
 
-  def startVisitRequest(patient_uuid : String): HttpRequestBuilder = {
+  def startVisitRequest(patient_uuid : String, opd_visit_type_id : String, login_location_id : String): HttpRequestBuilder = {
     http("start visit")
       .post("/openmrs/ws/rest/v1/visit")
-      .body(StringBody(s"""{"patient":"$patient_uuid","visitType":"f6ce7bf9-e349-11e3-983a-91270dcbd3bf","location":"a447a087-166e-40b0-bf9e-973af073ec5b"}"""))
+      .body(StringBody(s"""{"patient":"$patient_uuid","visitType":"$opd_visit_type_id","location":"$login_location_id"}"""))
       .asJSON
   }
 }
