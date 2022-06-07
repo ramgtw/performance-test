@@ -7,7 +7,9 @@ import org.bahmni.gatling.Configuration
 import org.bahmni.gatling.Configuration.Constants._
 import org.bahmni.gatling.HttpRequests._
 
-object Registration_Name_Search_Flow {
+import scala.util.Random
+
+object Registration_Name_Search_OPD_Visit_Flow {
 
   val login: ChainBuilder = exec(
     getLoginLocations
@@ -55,6 +57,14 @@ object Registration_Name_Search_Flow {
   def performSearch(patientName: String): ChainBuilder = {
     exec(
       searchPatientUsingName(LOGIN_LOCATION_UUID, patientName)
+        .check(
+          status.is(200),
+          jsonPath("$..uuid").findAll.transform(Random.shuffle(_).head).optional.saveAs("p_uuID")
+        )
+        .resources(
+
+          getPatientProfileAfterRegistration("${p_uuID}"),
+          startVisitRequest("${p_uuID}", VISIT_TYPE_ID, LOGIN_LOCATION_UUID).check(status.is(201)))
     )
   }
 
