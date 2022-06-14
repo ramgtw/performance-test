@@ -12767,7 +12767,7 @@
           "erroneousValue": null,
           "value": "high fever",
           "autocompleteValue": "high fever",
-          "__prevValue": "high feve",
+          "__prevValue": "Fever since 2 Days",
           "_value": "high fever",
           "disabled": false,
           "voided": false
@@ -12789,7 +12789,6 @@
           "erroneousValue": null,
           "value": "had cold few days back",
           "autocompleteValue": "had cold few days back",
-          "__prevValue": "had cold few days bac",
           "_value": "had cold few days back",
           "disabled": false,
           "voided": false
@@ -12836,6 +12835,48 @@
           "isBoolean": true,
           "showComment": false,
           "disabled": false,
+          "voided": false
+        },
+        {
+          "concept": {
+            "uuid": "c3ae29e3-9836-4df9-bcef-8d01b776854d",
+            "name": "Consultation Images",
+            "dataType": "N/A"
+          },
+          "units": null,
+          "label": "Consultation Images",
+          "possibleAnswers": [],
+          "groupMembers": [
+            {
+              "concept": {
+                "uuid": "4fbf4b32-4411-436c-9c3b-1a907685a0a0",
+                "name": "Image",
+                "dataType": "Complex"
+              },
+              "units": null,
+              "label": "Image",
+              "possibleAnswers": [],
+              "groupMembers": [],
+              "comment": null,
+              "isObservation": true,
+              "conceptUIConfig": {
+                "allowAddMore": true,
+                "required": false
+              },
+              "uniqueId": "observation_9",
+              "erroneousValue": null,
+              "value": "{$imageUrl}",
+              "autocompleteValue": "{$imageUrl}",
+              "_value": "{$imageUrl}",
+              "disabled": false,
+              "voided": false
+            }
+          ],
+          "comment": null,
+          "isObservation": true,
+          "conceptUIConfig": [],
+          "uniqueId": "observation_10",
+          "erroneousValue": null,
           "voided": false
         }
       ],
