@@ -2,7 +2,7 @@ package org.bahmni.gatling.scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
-import io.gatling.http.Predef.jsonPath
+import io.gatling.http.Predef.{jsonPath, status}
 import org.bahmni.gatling.Configuration
 import org.bahmni.gatling.Configuration.Constants._
 import org.bahmni.gatling.HttpRequests._
@@ -121,8 +121,13 @@ object ClinicalFlow_Add_Observation {
         jsonPath("$..uuid").find.saveAs("encounterTypeUuid")
         )
         .resources(
+          postUploadDocument(patientUuid)
+            .check(
+              jsonPath("$.url").find.saveAs("imageUrl"),
+              status.is(200)
+            ),
         postHistoryAndExaminationEncounter(patientUuid, "${encounterTypeUuid}", LOGIN_LOCATION_UUID ,
-          "${currentProviderUuid}"),
+          "${currentProviderUuid}", "${imageUrl}"),
           postVitalsEncounter(patientUuid, "${encounterTypeUuid}", LOGIN_LOCATION_UUID ,
             "${currentProviderUuid}"),
           postOrderEncounter(patientUuid, "${encounterTypeUuid}", LOGIN_LOCATION_UUID ,

@@ -491,7 +491,7 @@ object HttpRequests {
 
 
   def postHistoryAndExaminationEncounter(patientUuid: String, encounterTypeUuid: String, locationUuid: String,
-                                         currentProviderUuid: String): HttpRequestBuilder = {
+                                         currentProviderUuid: String, imageUrl: String): HttpRequestBuilder = {
 
       val jsonString: String = Source.fromFile(("jss-performance/src/test/resources/bodies/" +
         "encounter_history_and_examination_body.json")).mkString
@@ -501,6 +501,9 @@ object HttpRequests {
       json.encounterTypeUuid = encounterTypeUuid;
       json.locationUuid = locationUuid;
       json.providers(0).uuid = currentProviderUuid;
+      json.observations(0).groupMembers(5).groupMembers(0).value = imageUrl;
+      json.observations(0).groupMembers(5).groupMembers(0).autocompleteValue = imageUrl;
+      json.observations(0).groupMembers(5).groupMembers(0)._value = imageUrl;
 
       http("post history and examination for a patient")
         .post("/openmrs/ws/rest/v1/bahmnicore/bahmniencounter")
@@ -560,6 +563,18 @@ object HttpRequests {
     json.drugOrders(0).drugNonCoded = "TestDrug-" + randomDrugQuantity + "mg";
     http("post drug info for a patient")
       .post("/openmrs/ws/rest/v1/bahmnicore/bahmniencounter")
+      .body(StringBody(json.toString()))
+      .asJSON
+  }
+
+  def postUploadDocument(patientUuid: String): HttpRequestBuilder = {
+
+    val jsonString = Source.fromFile("jss-performance/src/test/resources/bodies/post_consultation_imageFile_body.json").mkString
+    val json = dijon.parse(jsonString)
+    json.patientUuid = patientUuid;
+
+    http("post patient consultation image")
+      .post("/openmrs/ws/rest/v1/bahmnicore/visitDocument/uploadDocument")
       .body(StringBody(json.toString()))
       .asJSON
   }
