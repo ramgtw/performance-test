@@ -24,10 +24,10 @@ jobs:
     steps:
       - name: Generate Test Data
         run: |
-          if [ ${{env.LOAD_SIMULATION_TYPE}} eq 'peak']
+          if [${{env.LOAD_SIMULATION_TYPE}} eq peak]
           then
             export PATIENT_NAME='300'
-          elif [ ${{env.LOAD_SIMULATION_TYPE}} eq 'high']
+          elif [${{env.LOAD_SIMULATION_TYPE}} eq high]
           then
             export PATIENT_NAME='200'
           else
