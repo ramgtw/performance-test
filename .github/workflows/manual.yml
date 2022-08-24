@@ -1,0 +1,36 @@
+name: Test Performance Test
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+    inputs:
+      TRAFFIC_LOAD:
+        description: "Traffic Load Simulation Type"
+        required: true
+        type: choice
+        default: standard
+        options:
+          - standard
+          - high
+          - peak
+env:
+  LOAD_SIMULATION_TYPE: ${{ github.event.inputs.TRAFFIC_LOAD || 'standard' }}
+jobs:
+  performance-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Test Data
+        run: |
+          if [${{ env.LOAD_SIMULATION_TYPE}} == 'peak']
+          then
+            export PATIENT_NAME='300'
+          elif [${{ env.LOAD_SIMULATION_TYPE}} == 'high']
+          then
+            export PATIENT_NAME='200'
+          else
+            export PATIENT_NAME='10'
+          fi
+          echo PATIENT_NAME
